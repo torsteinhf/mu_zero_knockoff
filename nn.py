@@ -33,7 +33,7 @@ class NN():
         with open(filename + ".pkl", "wb") as f:
             pickle.dump(params, f)
 
-    def load_params(self, params, filename):
+    def load_params(self, filename):
         with open(filename + ".pkl", 'rb') as f:
             loaded_data = pickle.load(f)
         return loaded_data

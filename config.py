@@ -18,7 +18,8 @@ game_chosen = "ttfe"
 
 game_params = {
     "ttfe" : {
-        "grid_size" : 2
+        "grid_size" : 2,
+        "moves" : ["LEFT", "RIGHT", "UP", "DOWN"]
     }
 }
 
