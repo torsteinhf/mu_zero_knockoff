@@ -1,4 +1,4 @@
-from video_games.ttfe import TTFE
+from video_games.game_2048 import TTFE
 
 I_t = ... #training interval for the three neural networks: Ψ = (NNr,NNd,NNp) 
 N_e = ... #number of episodes; 
