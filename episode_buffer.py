@@ -1,6 +1,6 @@
 
 # episode buffer
-class EB():
+class EpisodeBuffer():
 
     def __init__(self) -> None:
         self.episodes = []

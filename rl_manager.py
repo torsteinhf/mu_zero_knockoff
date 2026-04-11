@@ -1,6 +1,6 @@
 
 
-class RLM():
+class RLManager():
 
     def __init__(self) -> None:
         pass
