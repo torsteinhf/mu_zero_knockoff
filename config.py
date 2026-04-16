@@ -10,6 +10,7 @@ ACTION_TO_IDX = {
     'RIGHT' : 3
 }
 INPUT_DIM = BOARD_SIZE * BOARD_SIZE
+###################
 
 ### Representation input ###
 LOOKBACK = 0 # let lookback be 0 as the current obs is markov (ca)

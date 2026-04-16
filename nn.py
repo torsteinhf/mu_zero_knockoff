@@ -1,24 +1,36 @@
-import numpy as np
+import flax.linen as nn
 import jax.numpy as jnp
+from config import ABSTRACT_DIM, NUM_ACTIONS
 
-class NN():
+# Representation Network : state sequence  -> abstract state s
+class NNr (nn.Module):
+    @nn.compact
+    def __call__(self, x):
+        x = nn.Dense(128)(x);  x = nn.relu(x)
+        x = nn.Dense(128)(x);  x = nn.relu(x)
+        x = nn.Dense(ABSTRACT_DIM)(x)
+        return x
 
-    def __init__(self, activation) -> None:
-        self.activation = activation
 
-    def gen_params(self, input_size, hiddens_layers: list, output_size, range_w):
-        layers = [input_size] + hiddens_layers + [output_size]
-        sender = layers[0]
-        params = []
-        for receiver in layers[1:]:
-            weights = np.random.uniform(range_w[0], range_w[1], (sender, receiver))
-            biases = np.random.uniform(range_w[0], range_w[1], (1, receiver))
-            sender = receiver
-            params.append([weights, biases])
-        return params
-    
-    def act_func(self, z: float):
-        if self.activation == "relu": return jnp.maximum(0, z)
-        elif self.activation == "tanh": return jnp.tanh(z)
-        elif self.activation == "sigmoid": return 1 / (1 + jnp.exp(-z))
-        else: raise NotImplementedError("Activation function not implemented")
+# Dynamics Network : NNd: (abstract_state, action_onehot) -> (next_abstract_state, reward).
+class NNd (nn.Module):
+
+    @nn.compact
+    def __call__(self, state, action_oh):
+        x = jnp.concatenate([state, action_oh])
+        x = nn.Dense(128)(x);  x = nn.relu(x)
+        x = nn.Dense(128)(x);  x = nn.relu(x)
+        next_state = nn.Dense(ABSTRACT_DIM)(x)
+        reward     = nn.Dense(1)(x)[0]
+        return next_state, reward
+
+
+# Prediction Network : NNp: abstract_state -> (policy, value).
+class NNp(nn.Module):
+
+    @nn.compact
+    def __call__(self, state):
+        x      = nn.Dense(64)(state);  x = nn.relu(x)
+        policy = nn.softmax(nn.Dense(NUM_ACTIONS)(x))
+        value  = nn.Dense(1)(x)[0]
+        return policy, value
